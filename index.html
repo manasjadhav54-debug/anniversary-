@@ -17,7 +17,7 @@ body{
   overflow:hidden;
 }
 
-/* START */
+/* START SCREEN */
 #start{
   position:fixed;
   inset:0;
@@ -25,7 +25,7 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
-  z-index:10;
+  z-index:20;
 }
 .start-btn{
   padding:18px 36px;
@@ -43,6 +43,7 @@ body{
   align-items:center;
   justify-content:center;
   text-align:center;
+  z-index:15;
 }
 .intro-box{
   padding:40px 30px;
@@ -54,10 +55,18 @@ body{
   font-family:'Playfair Display',serif;
   font-size:2.6rem;
 }
-.days{margin-top:12px;opacity:0.85;}
+.days{
+  margin-top:14px;
+  opacity:0.85;
+}
 
-/* SLIDES */
-.slideshow{position:fixed;inset:0;display:none;}
+/* SLIDESHOW */
+.slideshow{
+  position:fixed;
+  inset:0;
+  display:none;
+  z-index:10;
+}
 .slide{
   position:absolute;
   inset:0;
@@ -93,6 +102,7 @@ body{
   display:none;
   overflow-y:auto;
   padding:40px 18px 140px;
+  z-index:12;
 }
 .letter-box{
   max-width:900px;
@@ -101,6 +111,16 @@ body{
   border-radius:32px;
   background:rgba(255,255,255,0.08);
   backdrop-filter:blur(16px);
+}
+.letter-box h2{
+  font-family:'Playfair Display',serif;
+  text-align:center;
+  font-size:2.3rem;
+  margin-bottom:20px;
+}
+.letter-box p{
+  line-height:1.9;
+  font-size:1.05rem;
 }
 .final-line{
   margin-top:50px;
@@ -117,7 +137,7 @@ body{
   cursor:pointer;
 }
 
-/* 🌹 FLOATING RED PETALS (NOT STRAIGHT) */
+/* 🌹 FLOATING RED PETALS */
 .petal{
   position:fixed;
   top:-30px;
@@ -127,13 +147,12 @@ body{
   border-radius:100% 0 100% 0;
   opacity:0.85;
   pointer-events:none;
-  animation:fallDrift linear;
+  animation:petalFloat linear;
 }
 
-@keyframes fallDrift{
+@keyframes petalFloat{
   0%{
     transform:translateX(0) translateY(0) rotate(0deg);
-    opacity:0.9;
   }
   50%{
     transform:translateX(40px) translateY(50vh) rotate(180deg);
@@ -142,280 +161,6 @@ body{
     transform:translateX(-40px) translateY(120vh) rotate(360deg);
     opacity:0;
   }
-}
-</style>
-</head>
-
-<body>
-
-<div id="start">
-  <button class="start-btn" onclick="startExperience()">Tap to Begin ❤️</button>
-</div>
-
-<div id="intro">
-  <div class="intro-box">
-    <h1>Happy 1st Anniversary ❤️</h1>
-    <div class="days" id="daysTogether"></div>
-  </div>
-</div>
-
-<audio id="bgMusic" src="music.mp3" loop></audio>
-
-<div class="slideshow">
-  <div class="slide first active" style="background-image:url('photo1.jpg')">
-    <div class="caption">This is where everything began 🤍</div>
-  </div>
-
-  <div class="slide" style="background-image:url('photo2.jpg')">
-    <div class="caption">Your smile is my favourite place 🥰</div>
-  </div>
-
-  <div class="slide" style="background-image:url('photo3.jpg'); background-position:70% center;">
-    <div class="caption">All I want is forever with you 💞</div>
-  </div>
-
-  <div class="slide" style="background-image:url('photo4.jpg')">
-    <div class="caption">Comfort. Trust. Love. 😌</div>
-  </div>
-
-  <div class="slide" style="background-image:url('photo5.jpg')">
-    <div class="caption">One year down, a lifetime to go ❤️</div>
-  </div>
-</div>
-
-<div class="letter" id="letter">
-  <div class="letter-box">
-    <h2>My Love Letter 💌</h2>
-    <p>
-      Dear Shruti 💖,<br><br>
-      Every hangout, every date, every moment with you
-      means the world to me.<br><br>
-      I promise to always be by your side.<br><br>
-      Forever yours,<br>Manas 💍
-    </p>
-
-    <div class="final-line">
-      I love you a lot,<br>my princess 👑❤️
-    </div>
-
-    <button class="back-btn" onclick="restart()">View Memories Again 💖</button>
-  </div>
-</div>
-
-<script>
-/* DATE */
-const startDate = new Date(2025,0,29);
-document.getElementById("daysTogether").innerText =
-  Math.floor((new Date()-startDate)/(1000*60*60*24)) + " days of us ❤️";
-
-let slides=document.querySelectorAll(".slide");
-let index=0, interval;
-
-function startExperience(){
-  document.getElementById("start").style.display="none";
-  document.getElementById("intro").style.display="flex";
-  document.getElementById("bgMusic").play();
-
-  setTimeout(()=>{
-    document.getElementById("intro").style.display="none";
-    document.querySelector(".slideshow").style.display="block";
-    startSlideshow();
-  },3500);
-}
-
-function startSlideshow(){
-  interval=setInterval(()=>{
-    slides[index].classList.remove("active");
-    index++;
-    if(index<slides.length){
-      slides[index].classList.add("active");
-    }else{
-      clearInterval(interval);
-      document.querySelector(".slideshow").style.display="none";
-      document.getElementById("letter").style.display="block";
-    }
-  },8000);
-}
-
-function restart(){
-  document.getElementById("letter").style.display="none";
-  document.querySelector(".slideshow").style.display="block";
-  slides.forEach(s=>s.classList.remove("active"));
-  index=0;
-  slides[0].classList.add("active");
-  startSlideshow();
-}
-
-/* PETALS (FLOATING) */
-setInterval(()=>{
-  const p=document.createElement("div");
-  p.className="petal";
-  p.style.left=Math.random()*100+"vw";
-  p.style.animationDuration=7+Math.random()*4+"s";
-  document.body.appendChild(p);
-  setTimeout(()=>p.remove(),12000);
-},450);
-</script>
-
-</body>
-</html>}
-
-/* INTRO */
-#intro{
-  position:fixed;
-  inset:0;
-  background:radial-gradient(circle at top,#1a1a1a,#000);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:30px;
-}
-
-.intro-box{
-  padding:45px 30px;
-  border-radius:35px;
-  background:rgba(255,255,255,0.06);
-  backdrop-filter:blur(14px);
-  box-shadow:0 0 60px rgba(255,255,255,0.15);
-  animation:glow 4s infinite alternate;
-}
-
-@keyframes glow{
-  from{box-shadow:0 0 30px rgba(255,255,255,0.1);}
-  to{box-shadow:0 0 70px rgba(255,255,255,0.25);}
-}
-
-.intro-box h1{
-  font-family:'Playfair Display',serif;
-  font-size:2.8rem;
-}
-.intro-box h2{
-  margin-top:10px;
-  font-weight:300;
-  opacity:0.9;
-}
-.days{
-  margin-top:18px;
-  font-size:1.1rem;
-  opacity:0.85;
-}
-
-/* SLIDESHOW */
-.slideshow{
-  position:fixed;
-  inset:0;
-  display:none;
-}
-
-.slide{
-  position:absolute;
-  inset:0;
-  background-size:cover;
-  background-position:center;
-  background-repeat:no-repeat;
-  opacity:0;
-  transition:opacity 2s ease;
-}
-
-.slide.first{
-  background-size:contain;
-  background-color:#000;
-}
-
-.slide.active{opacity:1;}
-
-.caption{
-  position:absolute;
-  bottom:10%;
-  left:50%;
-  transform:translateX(-50%);
-  width:88%;
-  background:rgba(0,0,0,0.5);
-  backdrop-filter:blur(10px);
-  padding:20px;
-  border-radius:24px;
-  text-align:center;
-  line-height:1.6;
-}
-
-/* LETTER */
-.letter{
-  position:fixed;
-  inset:0;
-  display:none;
-  overflow-y:auto;
-  padding:40px 18px 140px;
-  background:#000;
-}
-
-.letter-box{
-  max-width:900px;
-  margin:auto;
-  padding:32px 24px;
-  border-radius:32px;
-  background:rgba(255,255,255,0.08);
-  backdrop-filter:blur(16px);
-}
-
-.letter-box h2{
-  text-align:center;
-  font-family:'Playfair Display',serif;
-  font-size:2.3rem;
-  margin-bottom:20px;
-}
-
-.letter-box p{
-  line-height:1.9;
-  font-size:1.05rem;
-}
-
-.final-line{
-  margin-top:50px;
-  text-align:center;
-  font-family:'Playfair Display',serif;
-  font-size:2rem;
-}
-
-.back-btn{
-  margin-top:40px;
-  width:100%;
-  padding:15px;
-  border-radius:30px;
-  border:none;
-  font-size:1rem;
-  cursor:pointer;
-}
-
-/* ROSE PETALS */
-.petal{
-  position:fixed;
-  top:-40px;
-  width:26px;
-  height:26px;
-  background:url('https://i.imgur.com/9Xn4RkO.png') no-repeat center/contain;
-  animation:fall linear;
-  pointer-events:none;
-}
-
-@keyframes fall{
-  to{transform:translateY(120vh) rotate(360deg);opacity:0;}
-}
-
-/* SPARKLES */
-.sparkle{
-  position:fixed;
-  width:6px;
-  height:6px;
-  background:white;
-  border-radius:50%;
-  opacity:0.6;
-  animation:twinkle 3s infinite;
-}
-
-@keyframes twinkle{
-  0%,100%{opacity:0.2;}
-  50%{opacity:0.8;}
 }
 </style>
 </head>
@@ -431,7 +176,6 @@ setInterval(()=>{
 <div id="intro">
   <div class="intro-box">
     <h1>Happy 1st Anniversary ❤️</h1>
-    <h2>One Year of Us</h2>
     <div class="days" id="daysTogether"></div>
   </div>
 </div>
@@ -439,34 +183,34 @@ setInterval(()=>{
 <!-- MUSIC -->
 <audio id="bgMusic" src="music.mp3" loop></audio>
 
-<!-- SLIDESHOW -->
+<!-- SLIDES -->
 <div class="slideshow">
 
   <div class="slide first active" style="background-image:url('photo1.jpg')">
     <div class="caption">
       This is where everything began 🤍<br>
-      With you, love feels calm, safe, and real ✨
+      The start of us, the start of something truly special ✨
     </div>
   </div>
 
   <div class="slide" style="background-image:url('photo2.jpg')">
     <div class="caption">
-      Your smile is my favourite place 🥰<br>
-      It makes my whole world lighter 💖
+      Your smile is my safe place 🥰<br>
+      One look at you and my heart feels lighter 💖
     </div>
   </div>
 
   <div class="slide" style="background-image:url('photo3.jpg'); background-position:70% center;">
     <div class="caption">
-      In moments like this, the world disappears 💞<br>
-      All I want is forever with you 🌍
+      In moments like this, the world fades away 💞<br>
+      All I see is you, all I want is forever 🌍
     </div>
   </div>
 
   <div class="slide" style="background-image:url('photo4.jpg')">
     <div class="caption">
-      Some love doesn’t need words 😌<br>
-      It’s felt in comfort and trust ❤️
+      Some love is quiet, deep, and comforting 😌<br>
+      Loving you feels peaceful and right ❤️
     </div>
   </div>
 
@@ -486,20 +230,26 @@ setInterval(()=>{
     <p>
       Dear Shruti 💖,<br><br>
 
-      Every hangout, every date, every little moment with you
-      means a lot to me. You make love feel easy, warm, and beautiful ❤️<br><br>
+      One year ago, we started something beautiful and every single day since then
+      has made me more sure about us 🥹❤️<br><br>
 
-      I may not promise perfection, but I promise this 
-      I will always be by your side. In every phase, every mood,
-      and every dream, I choose you. Always.<br><br>
+      I don’t have one favourite memory, because honestly,
+      every hangout, every date, every little moment with you
+      holds a special place in my heart 💫<br><br>
+
+      Your smile has the power to change my worst days into the best ones 😊  
+      With you, love feels easy, warm, and full of peace 🌷<br><br>
+
+      I promise to stand by you in laughter and silence,
+      in good days and tough ones. I choose you, always 💍<br><br>
 
       Forever yours,<br>
-      Manas 💍
+      Manas 🤍
     </p>
 
     <div class="final-line">
-      I love you a lot,<br>
-      my princess 👑❤️
+      I Loveee Youuu a lot,<br>
+      My Princessss 👑🥹❤️
     </div>
 
     <button class="back-btn" onclick="restart()">View Memories Again 💖</button>
@@ -507,38 +257,42 @@ setInterval(()=>{
 </div>
 
 <script>
-/* RELATIONSHIP START DATE (FIXED) */
-const startDate = new Date(2025, 0, 29); // 29 Jan 2025
+/* DATE */
+const startDate = new Date(2025, 0, 29);
+document.getElementById("daysTogether").innerText =
+  Math.floor((new Date() - startDate) / (1000*60*60*24)) +
+  " days of love, laughter & us 💖";
 
-function updateDays(){
-  const today = new Date();
-  const diff = today - startDate;
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  document.getElementById("daysTogether").innerText =
-    days + " days of love, laughter & us 💖";
-}
-updateDays();
-
-/* SLIDES */
 let slides = document.querySelectorAll(".slide");
 let index = 0;
 let interval;
 
+/* START EXPERIENCE */
 function startExperience(){
-  document.getElementById("start").style.display="none";
-  document.getElementById("intro").style.display="flex";
-
+  const start = document.getElementById("start");
+  const intro = document.getElementById("intro");
+  const slideshow = document.querySelector(".slideshow");
   const music = document.getElementById("bgMusic");
+
+  start.style.display = "none";
+  intro.style.display = "flex";
+
   music.volume = 0.35;
   music.play();
 
   setTimeout(()=>{
-    document.getElementById("intro").style.display="none";
-    document.querySelector(".slideshow").style.display="block";
+    intro.style.display = "none";
+    slideshow.style.display = "block";
+
+    slides.forEach(s=>s.classList.remove("active"));
+    index = 0;
+    slides[0].classList.add("active");
+
     startSlideshow();
-  },4000);
+  }, 3500);
 }
 
+/* SLIDESHOW */
 function startSlideshow(){
   interval = setInterval(()=>{
     slides[index].classList.remove("active");
@@ -547,15 +301,16 @@ function startSlideshow(){
       slides[index].classList.add("active");
     }else{
       clearInterval(interval);
-      document.querySelector(".slideshow").style.display="none";
-      document.getElementById("letter").style.display="block";
+      document.querySelector(".slideshow").style.display = "none";
+      document.getElementById("letter").style.display = "block";
     }
-  },8000);
+  }, 8000);
 }
 
+/* RESTART */
 function restart(){
-  document.getElementById("letter").style.display="none";
-  document.querySelector(".slideshow").style.display="block";
+  document.getElementById("letter").style.display = "none";
+  document.querySelector(".slideshow").style.display = "block";
   slides.forEach(s=>s.classList.remove("active"));
   index = 0;
   slides[0].classList.add("active");
@@ -565,22 +320,12 @@ function restart(){
 /* PETALS */
 setInterval(()=>{
   const p = document.createElement("div");
-  p.className="petal";
-  p.style.left=Math.random()*100+"vw";
-  p.style.animationDuration=6+Math.random()*4+"s";
+  p.className = "petal";
+  p.style.left = Math.random()*100 + "vw";
+  p.style.animationDuration = 7 + Math.random()*4 + "s";
   document.body.appendChild(p);
-  setTimeout(()=>p.remove(),10000);
-},500);
-
-/* SPARKLES */
-setInterval(()=>{
-  const s=document.createElement("div");
-  s.className="sparkle";
-  s.style.left=Math.random()*100+"vw";
-  s.style.top=Math.random()*100+"vh";
-  document.body.appendChild(s);
-  setTimeout(()=>s.remove(),3000);
-},700);
+  setTimeout(()=>p.remove(),12000);
+}, 450);
 </script>
 
 </body>
